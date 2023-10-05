@@ -9,6 +9,17 @@
 #? Importing the libraries required for this program
 import sys
 import random
+from enum import Enum
+
+class RPS(Enum):
+    ROCK = 1
+    PAPER = 2
+    SCISSORS = 3
+print (RPS(2)) #! Different ways to call class objects
+print (RPS.ROCK)
+print (RPS["ROCK"])
+print (RPS.ROCK.value)
+sys.exit()
 
 print("")
 #? Variable defining the choice made by the player
