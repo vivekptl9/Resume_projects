@@ -11,15 +11,16 @@ import sys
 import random
 from enum import Enum
 
-class RPS(Enum):
-    ROCK = 1
-    PAPER = 2
-    SCISSORS = 3
+def play_rps():
+    class RPS(Enum):
+        ROCK = 1
+        PAPER = 2
+        SCISSORS = 3
 
-playagain = True
+    #playagain = True
 
-while playagain:
-    
+    #while playagain:
+        
     print (RPS(2)) #! Different ways to call class objects
     print (RPS.ROCK)
     print (RPS["ROCK"])
@@ -28,13 +29,20 @@ while playagain:
 
     print("")
     #? Variable defining the choice made by the player
+    #?--------------------------------------------------------------------------------------
     playerchoice = input("Enter ... \n1 for Rock, \n2 for Paper, \n3 for Scissors: \n\n ")
+    
+    if playerchoice not in ["1","2","3"]:
+        print ("You must enter 1, 2, or 3.")
+        return play_rps()
+    
     player = int(playerchoice)
-    if player < 1 or player > 3:
-        sys.exit("You must enter 1,2,or 3.")
+    
     #? Variable defining the choice made by the computer
+    #?-----------------------------------------------------------------------------------
     computerchoice = random.choice("123")
     computer = int(computerchoice)
+    
     #-------------------------------------------------------------------------------
     print("\nYou chose " + playerchoice + ".")
     print("Python chose " + computerchoice + ".\n")
@@ -49,10 +57,17 @@ while playagain:
         print("😒 It's a Tie Game..!")
     else:
         print("🐍 Python Wins..🎉🎊")
-    playagain = input("\n Play again? \n Y for Yes or \n Q to quit\n\n")
+    
+    print("\nPlay again?")
+    while True:
+        playagain = input("\n Y for Yes or \n Q to quit\n\n")
+        if playagain.lower() not in ["y","q"]:
+            continue
+        else:
+            break
     if playagain.lower() == "y":
-        continue
+        return play_rps()    
     else:
         print("\n Thank you for playing!")
-        playagain = False
-sys.exit("Bye  .! 🙋‍♂️")
+        sys.exit("Bye  .! 🙋‍♂️")
+play_rps()
