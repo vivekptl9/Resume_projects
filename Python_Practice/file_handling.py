@@ -21,5 +21,8 @@ except FileNotFoundError:
     print("this file does not exist")
 #?-----------------------------------------------------------------------------------
 text = "this is new test file"
+text2 = "\nNew text in the same file using append command"
 with open("D:\\Resume_projects\\test2.txt",'w') as file:
     file.write(text)
+with open ("D:\\Resume_projects\\test2.txt",'a') as file:
+    file.write(text2)
