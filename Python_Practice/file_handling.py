@@ -12,3 +12,10 @@ if os.path.isdir(path2):
     print(path2)
 else:
     print("the path Do not exist")
+    
+#?-----------------------------------------------------------------------------------
+try:
+    with open("D:\\Resume_projects\\test.tx") as file:
+        print(file.read())
+except FileNotFoundError:
+    print("this file does not exist")
