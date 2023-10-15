@@ -19,3 +19,7 @@ try:
         print(file.read())
 except FileNotFoundError:
     print("this file does not exist")
+#?-----------------------------------------------------------------------------------
+text = "this is new test file"
+with open("D:\\Resume_projects\\test2.txt",'w') as file:
+    file.write(text)
