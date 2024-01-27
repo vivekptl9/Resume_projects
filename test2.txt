@@ -1,1 +1,2 @@
 this is new test file
+New text in the same file using append command
