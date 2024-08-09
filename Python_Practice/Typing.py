@@ -15,8 +15,8 @@ class Section:
         self.length: Optional[float] = length
     def __str__(self):
         return f"Section(upper={self.upper}, lower={self.lower}, length={self.length})"
-    def __repr__(self):
-        return f'({self.upper},{self.lower},{self.length})'
+    # def __repr__(self):
+    #     return f'({self.upper},{self.lower},{self.length})'
 
     
 
