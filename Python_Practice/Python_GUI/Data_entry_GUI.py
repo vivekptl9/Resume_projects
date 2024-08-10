@@ -25,25 +25,28 @@ frame = ttk.Frame(root)
 frame.pack()
 
 widgets_frame = ttk.LabelFrame(frame,text="Insert Row")
-widgets_frame.grid(row=0,column=0)
+widgets_frame.grid(row=0,column=0,padx=20,pady=10)
 
 name_entry = ttk.Entry(widgets_frame)
 name_entry.insert(0,"Name")
 name_entry.bind("<FocusIn>", lambda e: name_entry.delete("0","end"))
-name_entry.grid(row=0,column=0,sticky="ew")
+name_entry.grid(row=0,column=0,padx=5, pady=(0,5),sticky="ew")
 
 
 age_spinbox = ttk.Spinbox(widgets_frame, from_=18, to= 100)
-age_spinbox.grid(row=1,column=0,sticky="ew")
+age_spinbox.grid(row=1, column=0, padx=5, pady=5,sticky="ew")
 age_spinbox.insert(0, "Age")
 
 status_combobox = ttk.Combobox(widgets_frame, values=combo_list)
 status_combobox.current(0)
-status_combobox.grid(row=2, column=0, sticky="ew")
+status_combobox.grid(row=2, column=0,  padx=5, pady=5, sticky="ew")
 
 a=tk.BooleanVar()
 checkbutton = ttk.Checkbutton(widgets_frame,text="Employed", variable=a)
-checkbutton.grid(row=3, column=0, sticky="nsew")
+checkbutton.grid(row=3, column=0,  padx=5, pady=5, sticky="nsew")
+
+button = ttk.Button(widgets_frame,text="Insert")
+button.grid(row=4, column=0, padx=5, pady=5, sticky="ew")
 
 # Run the application
 root.mainloop()
