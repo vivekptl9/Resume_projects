@@ -6,8 +6,8 @@ import openpyxl
 root = tk.Tk()
 style = ttk.Style(root)
 # Correct full path to the .tcl file
-theme_path_d = r"d:\Resume_projects\Python_Practice\Python_GUI\forest-dark.tcl"
-theme_path_l = r"d:\Resume_projects\Python_Practice\Python_GUI\forest-light.tcl"
+theme_path_d = r"d:\Resume_projects\Python_Practice\Python_GUI\Py-to-xl\forest-dark.tcl"
+theme_path_l = r"d:\Resume_projects\Python_Practice\Python_GUI\Py-to-xl\forest-light.tcl"
 combo_list = ["Subscribed", "Not Subscribed", "Other"]
 
 
@@ -19,12 +19,12 @@ def toggle_mode():
 
 
 def load_data():
-    path = r"d:\Resume_projects\Python_Practice\Python_GUI\people.xlsx"
+    path = r"d:\Resume_projects\Python_Practice\Python_GUI\Py-to-xl\people.xlsx"
     workbook = openpyxl.load_workbook(path)
     sheet = workbook.active
 
     list_values = list(sheet.values)
-    print(list_values)
+    #print(list_values)
     for col_name in list_values[0]:
         treeview.heading(col_name, text=col_name)
 
@@ -41,7 +41,7 @@ def insert_row():
     # print(name, age, subscription_status, employment_status)
 
     # Insert row into Excel sheet
-    path = r"d:\Resume_projects\Python_Practice\Python_GUI\people.xlsx"
+    path = r"d:\Resume_projects\Python_Practice\Python_GUI\Py-to-xl\people.xlsx"
     workbook = openpyxl.load_workbook(path)
     sheet = workbook.active
     row_values = [name, age, subscription_status, employment_status]
