@@ -1,6 +1,25 @@
 import os
-# import openai
+import openai
 import customtkinter as ctk
+
+def generate():
+    prompt = "Please generate 10 ideas for coding projects"
+    language = language_dropdown.get()
+    prompt += "The programming language is "+language+" ."
+    difficulty = difficulty_value.get()
+    prompt+= "The difficulty is "+difficulty+" ."
+    
+    if checkbox1.get():
+        prompt+="The project should include a database"
+    if checkbox2.get():
+        prompt+="The project should include an API"
+    print(prompt)
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    response = openai.ChatCompletion.create(model="gpt-3.5-turbo",message=[{"role":"user","content":prompt}])
+    answer = response.choice[0].message.content
+    print(answer)
+
+    
 
 root = ctk.CTk()
 root.geometry("750x750")
@@ -51,6 +70,13 @@ checkbox1=ctk.CTkCheckBox(features_frame,text="Database")
 checkbox1.pack(side="left",padx=50,pady=10)
 checkbox2= ctk.CTkCheckBox(features_frame, text="API")
 checkbox2.pack(side="left", padx=50, pady=10)
+
+button =ctk.CTkButton(frame,text="Generate Ideas",command=generate)
+button.pack(padx=100,pady=(5,20),fill="x")
+result =ctk.CTkTextbox(root,font=ctk.CTkFont(size=15))
+result.pack(pady=10,fill="x",padx=100)
+
+
 
 
 root.mainloop()
