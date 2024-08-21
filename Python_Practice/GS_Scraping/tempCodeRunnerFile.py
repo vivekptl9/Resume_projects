@@ -1,13 +1,7 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-# Set up Selenium WebDriver (e.g., Chrome)
 driver = webdriver.Chrome()  # Use Firefox() or other browsers if needed
 
 # URL of the Google Scholar search
-url = "https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=The+Wavelength-Shifting+Optical+Module&oq="
+url = "https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=HADES+Vivek+patel&oq="
 
 # Open the URL
 driver.get(url)
@@ -23,23 +17,27 @@ for button in citation_buttons:
     try:
         # Click the citation button to open the citation options
         button.click()
-        
+
         # Wait for the citation menu to appear
-        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'gs_citi')))
-        
+        wait.until(EC.visibility_of_element_located(
+            (By.CLASS_NAME, 'gs_citi')))
+
         # Find the BibTeX link in the modal that appears and click it
-        bibtex_link = wait.until(EC.element_to_be_clickable((By.LINK_TEXT, 'BibTeX')))
+        bibtex_link = wait.until(
+            EC.element_to_be_clickable((By.LINK_TEXT, 'BibTeX')))
         bibtex_link.click()
 
         # Wait for the BibTeX page to load and extract the BibTeX content
-        bibtex_content = wait.until(EC.presence_of_element_located((By.TAG_NAME, 'pre'))).text
+        bibtex_content = wait.until(
+            EC.presence_of_element_located((By.TAG_NAME, 'pre'))).text
         print("BibTeX Content:\n", bibtex_content)
         print("---------------------------------------------------------")
 
         # Go back to the search results page
         driver.back()  # To go back from the BibTeX page
         driver.back()  # To go back from the citation menu
-        wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'gs_or_cit')))
+        wait.until(EC.visibility_of_element_located(
+            (By.CLASS_NAME, 'gs_or_cit')))
 
     except Exception as e:
         print(f"An error occurred: {e}")
