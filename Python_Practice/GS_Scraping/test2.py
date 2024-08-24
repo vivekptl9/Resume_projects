@@ -8,7 +8,7 @@ pg.FreeProxies()
 
 scholarly.use_proxy(pg)
 # Define the title of the paper you're looking for
-target_title = "Beam test results for new DIRICH readout chain for MAPMTs and MCPs"
+target_title = "Event reconstruction of free-streaming data for the RICH detector in the CBM experiment"
 
 # Search for the paper by title
 search_query = scholarly.search_pubs(target_title)
