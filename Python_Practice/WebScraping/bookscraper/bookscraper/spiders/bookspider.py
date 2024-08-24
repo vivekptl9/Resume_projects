@@ -1,9 +1,19 @@
+from typing import Iterable
 import scrapy
 from bookscraper.items import BookItem
+from urllib.parse import urlencode
+
+API_KEY = 'd556d15c-50f5-4f49-a997-01df2883d370'
+
+
+def get_proxy_url(url):
+    payload = {'api_key': API_KEY, 'url': url}
+    proxy_url = 'https://proxy.scrapeops.io/v1/?' + urlencode(payload)
+    return proxy_url
 
 class BookspiderSpider(scrapy.Spider):
     name = "bookspider"
-    allowed_domains = ["books.toscrape.com"]
+    allowed_domains = ["books.toscrape.com","proxy.scrapeops.io"]
     start_urls = ["https://books.toscrape.com"]
     custom_settings = {
         "FEEDS" : {
@@ -11,13 +21,16 @@ class BookspiderSpider(scrapy.Spider):
         }
     }
     
-    user_agent_list = [
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36',
-        'Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
-        'Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363',
-    ]
+    def start_requests(self):
+        yield scrapy.Request(url=self.start_urls[0], callback=self.parse)
+    
+    # user_agent_list = [
+    #     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36',
+    #     'Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
+    #     'Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)',
+    #     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75',
+    #     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363',
+    # ]
 
     def parse(self, response):
         books = response.css('article.product_pod')
@@ -28,7 +41,7 @@ class BookspiderSpider(scrapy.Spider):
                 book_url = "https://books.toscrape.com/" + relative_url
             else:
                 book_url = "https://books.toscrape.com/catalogue/" + relative_url
-            yield response.follow(book_url, callback=self.parse_book_page, headers = {"User-Agent":self.user_agent_list[random.randint(0,len(self.user_agent_list)-1)]})
+            yield scrapy.Request(url=book_url, callback=self.parse_book_page)
             # yield{
             #     'name': book.css("h3 a::text").get(),
             #     'price': book.css(".product_price  .price_color::text").get(),
@@ -40,7 +53,7 @@ class BookspiderSpider(scrapy.Spider):
                     next_page_url = 'https://books.toscrape.com/' + next_page
                 else:
                     next_page_url = 'https://books.toscrape.com/catalogue/' + next_page
-            yield response.follow(next_page_url, callback=self.parse, headers={"User-Agent": self.user_agent_list[random.randint(0, len(self.user_agent_list)-1)]})
+            yield scrapy.Request(url=next_page_url, callback=self.parse)
 
     def parse_book_page(self,response):
         table_rows = response.css("table tr")
