@@ -1,7 +1,10 @@
 Field,Value
-abstract,"First prototypes of the DIRICH module were obtained last year and were throughly tested  and are now ready for mass production. In November 2017 this DiRICH concept was tested  at COSY under real beam conditions along with H12700 MAPMTs in a small prototype setup.  In this talk we present first results from the analysis of beam test data, focussing in particular  on efficiency and ToT usage for crosstalk suppression. In addition we also discuss the effect  of a Wavelength Shifting coating (WLS) of the"
-author,"Patel, Vivek and Foertsch, Joerg and Kampert, Karl-Heinz and Pauly, Christian"
-journal,Verhandlungen der Deutschen Physikalischen Gesellschaft
-pub_year,2018
-title,Beam test results for new DIRICH readout chain for MAPMTs and MCPs
-venue,Verhandlungen der …
+abstract,"The Compressed Baryonic Matter (CBM) experiment is a dedicated heavy ion collision experiment at the FAIR facility. It will be one of the first HEP experiments which works in a triggerless mode: data received in the DAQ from the detectors will not be associated with events by a hardware trigger anymore. All raw data within a giventime period will be collected continuously in containers, so-called time-slices. The task of the reconstruction algorithms is to create events out of this raw data stream. In this contribution, the optimization"
+author,"Adamczewski-Musch, J{\""o}rn and Akishin, P and Becker, K--H and Bendarouach, Jordan and Deveaux, C and D{\""u}rr, Michael and Eschke, J{\""u}rgen and F{\""o}rtsch, J{\""o}rg and Heep, Julian and H{\""o}hne, Claudia and others"
+booktitle,EPJ Web of Conferences
+organization,EDP Sciences
+pages,01043
+pub_year,2019
+title,Event reconstruction of free-streaming data for the RICH detector in the CBM experiment
+venue,EPJ Web of …
+volume,214
