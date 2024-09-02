@@ -113,11 +113,7 @@ if selected_file:
 
 #? Fitting the model-------------------------------------------------------------------------------------------------
 
-    # models = {
-    #     "Linear Regression": LinearRegression(),
-    #     "Random Forest": RandomForestRegressor(),
-    #     "Gradient Boosting": GradientBoostingRegressor()
-    # }
+    
 
     model_lin = LinearRegression()
     model_lin.fit(X_train, Y_train)
@@ -128,12 +124,29 @@ if selected_file:
 
     model_gr = GradientBoostingRegressor()
     model_gr.fit(X_train, Y_train)
-    # r_squared_results = {}
-    # for model_name, model in models.items():
-    #     model.fit(X_train, Y_train)
-    #     y_pred = model.predict(X_test)
-    #     r2 = metrics.r2_score(Y_test, y_pred)
-    #     r_squared_results[model_name] = r2
+    
+    models = {
+        "Linear Regression": LinearRegression(),
+        "Random Forest": RandomForestRegressor(),
+        "Gradient Boosting": GradientBoostingRegressor()
+    }
+    
+    r_squared_results = {}
+    mape_results = {}
+    r_square_list = []
+    mae_list = []
+    for model_name, model in models.items():
+        model.fit(X_train, Y_train)
+        y_pred = model.predict(X_test)
+        
+        r2 = metrics.r2_score(Y_test, y_pred)
+        r_squared_results[model_name] = r2
+        
+        mape = metrics.mean_absolute_percentage_error(
+            Y_test, y_pred)*100
+        mape_results[model_name] = mape
+    print(r_squared_results)
+    print(mape_results)
 
 #? Model Evaluation on training data-------------------------------------------------------------------------------------------------
 
@@ -155,18 +168,16 @@ if selected_file:
     r2_rf_test = metrics.r2_score(Y_test, rf_pred_test)
     r2_gb_test = metrics.r2_score(Y_test, gb_pred_test)
     
-    mae_lin_test = metrics.mean_absolute_percentage_error(
-        Y_test, lin_pred_test)*100
+    mae_lin_test = metrics.mean_absolute_percentage_error(Y_test, lin_pred_test)*100
     mae_rf_test = metrics.mean_absolute_percentage_error(Y_test, rf_pred_test)*100
     mae_gb_test = metrics.mean_absolute_percentage_error(Y_test, gb_pred_test)*100
     
     
-    r_square_list = [r2_lin_test, r2_rf_test, r2_gb_test]
-    mae_list = [mae_lin_test, mae_rf_test, mae_gb_test]
+    
     
     df1 = pd.DataFrame({'Actual': Y_test, 'LR': lin_pred_test, 'RF': rf_pred_test, 'GB': gb_pred_test})
     df_melted2 = df1.melt(var_name='Model', value_name='Value')
-    print(df_melted2['Model'].unique())
+   
     st.title("Linear Regression Models For Premium Prediction")
     fig1, ax = plt.subplots(2, 2, sharex='row', sharey='all')
     ax[0, 0].hist(df1['Actual'])
@@ -185,23 +196,51 @@ if selected_file:
     st.pyplot(fig1)
     st.header("Model Metrics")
     st.markdown(f"""
-                - R-Squared value for Linear Regression Model on Test Data: :blue[{round(r2_lin_test,2)}]
-                - R-Squared value for Random Forest Model on Test Data: :blue[{round(r2_rf_test,2)}]
-                - R-Squared value for Gradient Boost Model on Test Data: :blue[{round(r2_gb_test,2)}]
+                - R-Squared value for {list(r_squared_results.keys())[0]} on Test Data: :blue[{round(list(r_squared_results.values())[0],2)}]
+                - R-Squared value for {list(r_squared_results.keys())[1]} on Test Data: :blue[{round(list(r_squared_results.values())[1],2)}]
+                - R-Squared value for {list(r_squared_results.keys())[2]} on Test Data: :blue[{round(list(r_squared_results.values())[2],2)}]
                 """)
     st.divider()
-    st.subheader(f"The best  R-Squared value is: :red[{round(max(r_square_list),2)}]")
+    max_key = max(r_squared_results, key = r_squared_results.get)
 
-    st.markdown(f"""
-                - Mean Absolute % Error value for Linear Regression Model on Test Data: :blue[{round(mae_lin_test,2)}%]
-                - Mean Absolute % Error value for Random Forest Model on Test Data: :blue[{round(mae_rf_test,2)}%]
-                - Mean Absolute % Error value for Gradient Boost Model on Test Data: :blue[{round(mae_gb_test,2)}%]
-                """)
-    st.divider()
     st.subheader(
-        f"The best  Mean Absolute Error value is: :red[{round(min(mae_list),2)}]%")
+        f"The Best R-Squared Value is: :red[{round(r_squared_results[max_key],2)}] for the  :red[{max_key}] Model")
 
     st.divider()
+    
+    st.markdown(f"""
+                - MAPE value for {list(mape_results.keys())[0]} on Test Data: :blue[{round(list(mape_results.values())[0])}%]
+                - MAPE value for {list(mape_results.keys())[1]} on Test Data: :blue[{round(list(mape_results.values())[1])}%]
+                - MAPE value for {list(mape_results.keys())[2]} on Test Data: :blue[{round(list(mape_results.values())[2])}%]
+                """)
+    st.divider()
+    min_key = min(mape_results, key=mape_results.get)
+
+    st.subheader(
+        f"The Best MAPE Value is: :red[{round(mape_results[max_key])}%] for the  :red[{min_key}] Model")
+
+    model = joblib.load('model_joblib_gr')
+    
+    p1 = st.slider("Enter the Age", 18,100)
+    s1 = st.selectbox("Sex",("Male","Female"))
+    
+    if s1=="Male":
+        p2 = 1
+    else:
+        p2 = 0
+    p3 = st.number_input("Enter the BMI")
+    p4 = st.slider("Enter the Children", 0, 4)
+    p5 = st.selectbox("Smoker",("Yes","No"))
+    if s1 == "Yes":
+        p5 = 1
+    else:
+        p5 = 0
+    p6 = st.slider("Enter the Region", 0, 4)
+    
+    if st.button("Predict"):
+        st.success(f"The Predicted Premium is: :red[${round(model.predict([[p1,p2,p3,p4,p5,p6]])[0],2)}]")
+    
+    
     st.title("Model Comparison Plot")
     fig2, ax2 = plt.subplots(figsize=(10, 6))
     for model in df_melted2['Model'].unique():
