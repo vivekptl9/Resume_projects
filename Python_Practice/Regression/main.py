@@ -16,7 +16,7 @@ import os
 
 #? Loading the dataset
 
-insurance_dataset = pd.read_csv('./insurance.csv')
+# insurance_dataset = pd.read_csv('./insurance.csv')
 
 #* first 5 rows of the dataframe
 #insurance_dataset.head()
