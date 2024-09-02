@@ -8,7 +8,6 @@ from sklearn import metrics
 from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
-import tkinter
 import joblib
 import streamlit as st
 import os
