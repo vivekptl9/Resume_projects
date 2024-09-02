@@ -275,7 +275,7 @@ if selected_file:
     
     with col1:
         st.write("")
-        st.write(insurance_dataset.head())
+        st.write(df.head())
     with col2:
         x_axis = st.selectbox("Select the X-axis",
                             options=columns+["None"], index=None)
