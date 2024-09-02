@@ -240,9 +240,20 @@ if selected_file:
     
     #? Model Evaluation on training data-------------------------------------------------------------------------------------------------
     
+    # ? List of files
+    files_model = 'model_joblib_gr'
+
+    # ? Dropdown for all the files
+    model_path = os.path.join(working_dir, files_model)
     
-    
-    model = joblib.load('./model_joblib_gr')
+    if os.path.exists(model_path):
+        print(f"The model file is located at: {model_path}")
+    else:
+        print(f"Model file does not exist at: {model_path}")
+
+    model = joblib.load(model_path)
+    print("Model loaded successfully.")
+
 
     p1 = st.slider("Enter the Age", 18, 100)
     s1 = st.selectbox("Sex", ("Male", "Female"))
