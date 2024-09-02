@@ -216,29 +216,12 @@ if selected_file:
     st.divider()
     min_key = min(mape_results, key=mape_results.get)
 
-    st.subheader(
-        f"The Best MAPE Value is: :red[{round(mape_results[max_key])}%] for the  :red[{min_key}] Model")
+    st.subheader(f"The Best MAPE Value is: :red[{round(mape_results[max_key])}%] for the  :red[{min_key}] Model")
+    
+    
 
-    model = joblib.load('model_joblib_gr')
+    #? Model Comparison Plot-------------------------------------------------------------------------------------------------
     
-    p1 = st.slider("Enter the Age", 18,100)
-    s1 = st.selectbox("Sex",("Male","Female"))
-    
-    if s1=="Male":
-        p2 = 1
-    else:
-        p2 = 0
-    p3 = st.number_input("Enter the BMI")
-    p4 = st.slider("Enter the Children", 0, 4)
-    p5 = st.selectbox("Smoker",("Yes","No"))
-    if s1 == "Yes":
-        p5 = 1
-    else:
-        p5 = 0
-    p6 = st.slider("Enter the Region", 0, 4)
-    
-    if st.button("Predict"):
-        st.success(f"The Predicted Premium is: :red[${round(model.predict([[p1,p2,p3,p4,p5,p6]])[0],2)}]")
     
     
     st.title("Model Comparison Plot")
@@ -252,6 +235,40 @@ if selected_file:
         plt.title('Histograms of Different Models')
         plt.legend(title='Model')
     st.pyplot(fig2)
+    
+    
+    
+    
+    #? Model Evaluation on training data-------------------------------------------------------------------------------------------------
+    
+    
+    
+    model = joblib.load('model_joblib_gr')
+
+    p1 = st.slider("Enter the Age", 18, 100)
+    s1 = st.selectbox("Sex", ("Male", "Female"))
+
+    if s1 == "Male":
+        p2 = 1
+    else:
+        p2 = 0
+    p3 = st.number_input("Enter the BMI")
+    p4 = st.slider("Enter the Children", 0, 4)
+    p5 = st.selectbox("Smoker", ("Yes", "No"))
+    if s1 == "Yes":
+        p5 = 1
+    else:
+        p5 = 0
+    p6 = st.slider("Enter the Region", 0, 4)
+
+    if st.button("Predict"):
+        st.success(
+            f"The Predicted Premium is: :red[${round(model.predict([[p1,p2,p3,p4,p5,p6]])[0],2)}]")
+
+
+
+    #? Data Exploration-------------------------------------------------------------------------------------------------
+    
     
     st.title("Want to play with the data?")
     col1, col2 = st.columns(2)
