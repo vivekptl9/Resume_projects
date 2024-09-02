@@ -242,7 +242,7 @@ if selected_file:
     
     
     
-    model = joblib.load('model_joblib_gr')
+    model = joblib.load('./model_joblib_gr')
 
     p1 = st.slider("Enter the Age", 18, 100)
     s1 = st.selectbox("Sex", ("Male", "Female"))
