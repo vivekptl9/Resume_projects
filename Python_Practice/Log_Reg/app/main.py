@@ -72,8 +72,7 @@ def add_sidebar():
             label,min_value=float(0),max_value=float(data[key].max()),
             value=float(data[key].mean()),
             key=key,
-        )
-    print(input_dict)    
+        )   
     return input_dict,file_path
 
 
@@ -93,7 +92,7 @@ def get_scaled_values(input_data,file_path):
 def get_radar_chart(input_data,file_path):
     
     input_data = get_scaled_values(input_data,file_path)
-    
+    print(input_data)
     categories = ['Radius', 'Texture', 'Perimeter', 'Area',
                 'Smoothness', 'Compactness',
                 'Concavity', 'Concave Points',
@@ -143,7 +142,7 @@ def get_radar_chart(input_data,file_path):
             )),
         showlegend=True
     )
-
+    
     return fig
 
 def add_predictions(input_data):
@@ -179,13 +178,7 @@ def main():
     st.set_page_config(page_title="Breast Cancer Prediction", page_icon=":female-doctor:", layout="wide")
     #file_path=file_path
     input_data ,file_path = add_sidebar()
-    print("********************************")
-    print("********************************")
-    print("********************************")
-    print(input_data)
-    print("********************************")
-    print("********************************")
-    print("********************************")
+    
     with st.container():
         st.title("Breast Cancer Predictior")
         st.write("""Please connect this app to your cytology lab to help diagnose breast cancer form your tissue sample. 
