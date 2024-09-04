@@ -168,7 +168,7 @@ def add_predictions(input_data):
 def main():
     st.set_page_config(page_title="Breast Cancer Prediction", page_icon=":female-doctor:", layout="wide")
     
-    input_data = add_sidebar()
+    input_data = add_sidebar(file_path)
     
     with st.container():
         st.title("Breast Cancer Predictior")
