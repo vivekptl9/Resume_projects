@@ -7,24 +7,31 @@ import plotly.graph_objects as go
 import numpy as np
 
 
-current_dir = os.getcwd()
-parent_dir = os.path.dirname(current_dir)
-file_path= ""
-for f in os.listdir(parent_dir):
-    if f.endswith(".csv"):
-        file_path = os.path.join(parent_dir, f)
-#ssdata = pd.read_csv(file_path)
-# print("_____________________OLD_________________")
-# print(data.head())
+def add_sidebar():
+    current_dir = os.getcwd()
+    parent_dir = os.path.dirname(current_dir)
 
-def add_sidebar(file_path):
-    st.sidebar.header("Cell Nuclei Measurements")
-    st.sidebar.subheader(":blue[Use the following sliders to update the chart on the right.]")
-    st.sidebar.divider()
+    print(f"Current directory: {current_dir}")
+    print(f"Parent directory: {parent_dir}")
+
+    file_path = None
+    for f in os.listdir(parent_dir):
+        if f.endswith(".csv"):
+            file_path = os.path.join(parent_dir, f)
+            break  # Exit the loop after finding the first CSV file
+
+    if not file_path:
+        raise FileNotFoundError("No CSV file found in the parent directory.")
+
+    print(f"Using file: {file_path}")
+
     data = pd.read_csv(file_path)
-    # print("_______________NEW______________")
-    # print(data.head())
-    
+
+    st.sidebar.header("Cell Nuclei Measurements")
+    st.sidebar.subheader(
+        ":blue[Use the following sliders to update the chart on the right.]")
+    st.sidebar.divider()
+
     slider_labels = [
         ("Radius (mean)", "radius_mean"),
         ("Texture (mean)", "texture_mean"),
@@ -66,11 +73,11 @@ def add_sidebar(file_path):
             value=float(data[key].mean()),
             key=key,
         )
-        
-    return input_dict
+    print(input_dict)    
+    return input_dict,file_path
 
 
-def get_scaled_values(input_data):
+def get_scaled_values(input_data,file_path):
     data = pd.read_csv(file_path)
     X = data.drop(['diagnosis'], axis=1)
     scaled_dict = {}
@@ -83,9 +90,9 @@ def get_scaled_values(input_data):
 
     return scaled_dict
 
-def get_radar_chart(input_data):
+def get_radar_chart(input_data,file_path):
     
-    input_data = get_scaled_values(input_data)
+    input_data = get_scaled_values(input_data,file_path)
     
     categories = ['Radius', 'Texture', 'Perimeter', 'Area',
                 'Smoothness', 'Compactness',
@@ -170,9 +177,15 @@ def add_predictions(input_data):
 
 def main():
     st.set_page_config(page_title="Breast Cancer Prediction", page_icon=":female-doctor:", layout="wide")
-    file_path=file_path
-    input_data = add_sidebar(file_path)
-    
+    #file_path=file_path
+    input_data ,file_path = add_sidebar()
+    print("********************************")
+    print("********************************")
+    print("********************************")
+    print(input_data)
+    print("********************************")
+    print("********************************")
+    print("********************************")
     with st.container():
         st.title("Breast Cancer Predictior")
         st.write("""Please connect this app to your cytology lab to help diagnose breast cancer form your tissue sample. 
@@ -184,7 +197,7 @@ def main():
     col1, col2 = st.columns((1,1))
     
     with col1:
-        radar_chart = get_radar_chart(input_data)
+        radar_chart = get_radar_chart(input_data,file_path)
         st.plotly_chart(radar_chart)
     with col2:
         add_predictions(input_data)
