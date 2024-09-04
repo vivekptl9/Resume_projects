@@ -9,10 +9,11 @@ import numpy as np
 
 current_dir = os.getcwd()
 parent_dir = os.path.dirname(current_dir)
+file_path= ""
 for f in os.listdir(parent_dir):
     if f.endswith(".csv"):
         file_path = os.path.join(parent_dir, f)
-#print(f"printing File path : {file_path}")
+
 
 def add_sidebar():
     st.sidebar.header("Cell Nuclei Measurements")
