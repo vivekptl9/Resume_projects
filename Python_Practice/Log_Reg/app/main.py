@@ -8,22 +8,13 @@ import numpy as np
 
 
 def add_sidebar():
+    
     current_dir = os.getcwd()
-    parent_dir = os.path.dirname(current_dir)
-
-    print(f"Current directory: {current_dir}")
-    print(f"Parent directory: {parent_dir}")
-
-    file_path = None
-    for f in os.listdir(parent_dir):
-        if f.endswith(".csv"):
-            file_path = os.path.join(parent_dir, f)
-            break  # Exit the loop after finding the first CSV file
-
-    if not file_path:
-        raise FileNotFoundError("No CSV file found in the parent directory.")
-
-    print(f"Using file: {file_path}")
+    file_path = os.path.join(current_dir, 'data.csv')
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"No CSV file found at {file_path}")
+    
+    
 
     data = pd.read_csv(file_path)
 
@@ -92,7 +83,7 @@ def get_scaled_values(input_data,file_path):
 def get_radar_chart(input_data,file_path):
     
     input_data = get_scaled_values(input_data,file_path)
-    print(input_data)
+
     categories = ['Radius', 'Texture', 'Perimeter', 'Area',
                 'Smoothness', 'Compactness',
                 'Concavity', 'Concave Points',
