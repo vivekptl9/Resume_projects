@@ -2,7 +2,7 @@ import streamlit as st
 import pickle as pickle
 import pandas as pd
 import os
-os.system('pip install plotly')
+import plotly
 import plotly.graph_objects as go
 import numpy as np
 
