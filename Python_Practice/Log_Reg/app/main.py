@@ -15,6 +15,8 @@ for f in os.listdir(parent_dir):
 
 def add_sidebar():
     st.sidebar.header("Cell Nuclei Measurements")
+    st.sidebar.subheader(":blue[Use the following sliders to update the chart on the right.]")
+    st.sidebar.divider()
     data = pd.read_csv(file_path)
     #print(data.head())
     
@@ -120,6 +122,8 @@ def get_radar_chart(input_data):
     ))
 
     fig.update_layout(
+        width=500, height=500,
+        margin=dict(l=10, r=10, t=10, b=10),
         polar=dict(
             radialaxis=dict(
                 visible=True,
@@ -138,6 +142,9 @@ def add_predictions(input_data):
     input_array_scaled = scale.transform(input_array)
     prediction = model.predict(input_array_scaled)
     
+    proba_Benign = model.predict_proba(input_array_scaled)[0][0]*100
+    proba_Malicious = model.predict_proba(input_array_scaled)[0][1]*100
+    
     st.subheader("Cell cluster prediction")
     st.write("The cell cluster is:")
     
@@ -145,9 +152,16 @@ def add_predictions(input_data):
         st.write(':green[Benign]')
     else:
         st.write(':red[Malicious]')
-    st.write(f"Probability of being :green[Benign]: :blue[{round(model.predict_proba(input_array_scaled)[0][0]*100, 2)}%]")
-    st.write(f"Probability of being :red[Malicious]: :blue[{round(model.predict_proba(input_array_scaled)[0][1]*100,2)}%]")
-    st.write("This app can assist medical professionals in making a diagnosis, but should not be used as a substitute for a professional diagnosis.")
+    if proba_Benign > 50:
+        st.write(f"Probability of being :green[Benign]  :  :green[{round(proba_Benign, 2)}%]")
+        st.write(f"Probability of being :gray[Malicious]  :  :gray[{round(proba_Malicious, 2)}%]")
+    else:
+        st.write(f"Probability of being :gray[Benign]  :gray[{round(proba_Benign, 2)}%]")
+        st.write(f"Probability of being :red[Malicious]  :red[{round(proba_Malicious, 2)}%]")
+    # st.write(f"Probability of being :green[Benign]: :blue[{round(model.predict_proba(input_array_scaled)[0][0]*100, 2)}%]")
+    # st.write(f"Probability of being :red[Malicious]: :blue[{round(model.predict_proba(input_array_scaled)[0][1]*100,2)}%]")
+    st.divider()
+    st.write(":gray[Note:- This app can assist medical professionals in making a diagnosis, but should not be used as a substitute for a professional diagnosis.]")
 
 def main():
     st.set_page_config(page_title="Breast Cancer Prediction", page_icon=":female-doctor:", layout="wide")
@@ -157,11 +171,12 @@ def main():
     with st.container():
         st.title("Breast Cancer Predictior")
         st.write("""Please connect this app to your cytology lab to help diagnose breast cancer form your tissue sample. 
-                This app predicts using a machine learning model whether a breast mass is :blue[benign] or :blue[malignant]
+                This app predicts using a machine learning model whether a breast mass is :blue[Benign] or :blue[Malignant]
                 based on the measurements it receives from your cytosis lab. You can also update the measurements by hand using the sliders in the sidebar.""")
+        st.divider()
 
-    st.columns((3,1))
-    col1, col2 = st.columns((3,1))
+    st.columns((1,1))
+    col1, col2 = st.columns((1,1))
     
     with col1:
         radar_chart = get_radar_chart(input_data)
