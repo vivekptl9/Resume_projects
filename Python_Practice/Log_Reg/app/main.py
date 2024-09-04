@@ -13,14 +13,17 @@ file_path= ""
 for f in os.listdir(parent_dir):
     if f.endswith(".csv"):
         file_path = os.path.join(parent_dir, f)
-data = pd.read_csv(file_path)
+#data = pd.read_csv(file_path)
+# print("_____________________OLD_________________")
+# print(data.head())
 
-def add_sidebar():
+def add_sidebar(file_path):
     st.sidebar.header("Cell Nuclei Measurements")
     st.sidebar.subheader(":blue[Use the following sliders to update the chart on the right.]")
     st.sidebar.divider()
-    
-    #print(data.head())
+    data = pd.read_csv(file_path)
+    # print("_______________NEW______________")
+    # print(data.head())
     
     slider_labels = [
         ("Radius (mean)", "radius_mean"),
