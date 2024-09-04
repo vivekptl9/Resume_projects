@@ -13,7 +13,7 @@ file_path= ""
 for f in os.listdir(parent_dir):
     if f.endswith(".csv"):
         file_path = os.path.join(parent_dir, f)
-#data = pd.read_csv(file_path)
+#ssdata = pd.read_csv(file_path)
 # print("_____________________OLD_________________")
 # print(data.head())
 
@@ -170,7 +170,7 @@ def add_predictions(input_data):
 
 def main():
     st.set_page_config(page_title="Breast Cancer Prediction", page_icon=":female-doctor:", layout="wide")
-    
+    file_path=file_path
     input_data = add_sidebar(file_path)
     
     with st.container():
