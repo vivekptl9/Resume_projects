@@ -7,22 +7,19 @@ import plotly.graph_objects as go
 import numpy as np
 
 
+def get_clean_data():
+    data = pd.read_csv("data.csv")
+
+    data = data.drop(['Unnamed: 32', 'id'], axis=1)
+
+    data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
+    return data
+
+
 def add_sidebar():
-    
-    current_dir = os.getcwd()
-    file_path = os.path.join(current_dir, 'data.csv')
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"No CSV file found at {file_path}")
-    
-    
-
-    data = pd.read_csv(file_path)
-
     st.sidebar.header("Cell Nuclei Measurements")
-    st.sidebar.subheader(
-        ":blue[Use the following sliders to update the chart on the right.]")
-    st.sidebar.divider()
 
+    data = get_clean_data()
     slider_labels = [
         ("Radius (mean)", "radius_mean"),
         ("Texture (mean)", "texture_mean"),
@@ -57,22 +54,23 @@ def add_sidebar():
     ]
 
     input_dict = {}
-    
+
     for label, key in slider_labels:
         input_dict[key] = st.sidebar.slider(
-            label,min_value=float(0),max_value=float(data[key].max()),
-            value=float(data[key].mean()),
-            key=key,
-        )   
-    return input_dict,file_path
+            label,
+            min_value=float(0),
+            max_value=float(data[key].max()),
+            value=float(data[key].mean())
+        )
+
+    return input_dict
 
 
-def get_scaled_values(input_data,file_path):
-    data = pd.read_csv(file_path)
+def get_scaled_values(input_dict):
+    data = get_clean_data()
     X = data.drop(['diagnosis'], axis=1)
     scaled_dict = {}
-
-    for key, value in input_data.items():
+    for key, value in input_dict.items():
         max_val = X[key].max()
         min_val = X[key].min()
         scaled_value = (value - min_val) / (max_val - min_val)
@@ -80,9 +78,9 @@ def get_scaled_values(input_data,file_path):
 
     return scaled_dict
 
-def get_radar_chart(input_data,file_path):
+def get_radar_chart(input_data):
     
-    input_data = get_scaled_values(input_data,file_path)
+    input_data = get_scaled_values(input_data)
 
     categories = ['Radius', 'Texture', 'Perimeter', 'Area',
                 'Smoothness', 'Compactness',
@@ -168,7 +166,7 @@ def add_predictions(input_data):
 def main():
     st.set_page_config(page_title="Breast Cancer Prediction", page_icon=":female-doctor:", layout="wide")
     #file_path=file_path
-    input_data ,file_path = add_sidebar()
+    input_data = add_sidebar()
     
     with st.container():
         st.title("Breast Cancer Predictior")
@@ -181,7 +179,7 @@ def main():
     col1, col2 = st.columns((1,1))
     
     with col1:
-        radar_chart = get_radar_chart(input_data,file_path)
+        radar_chart = get_radar_chart(input_data)
         st.plotly_chart(radar_chart)
     with col2:
         add_predictions(input_data)
