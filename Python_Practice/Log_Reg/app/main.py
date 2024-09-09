@@ -14,6 +14,7 @@ def get_clean_data():
 # ? Folder path
     folder_path = f"{working_dir}"
 # print(f"Folder Path: {folder_path}")
+    file_path= None
 # ? List of files
     for f in os.listdir(folder_path):
         if f.endswith(".csv"):
