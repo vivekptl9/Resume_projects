@@ -6,17 +6,25 @@ import plotly
 import plotly.graph_objects as go
 import numpy as np
 
-current_directory = os.getcwd()
-filename = "data.csv"
-file_path = os.path.join(current_directory, filename)
-print(file_path)
 
 def get_clean_data():
-    data = pd.read_csv(file_path)
+    working_dir = os.path.dirname(os.path.abspath(__file__))
 
-    data = data.drop(['Unnamed: 32', 'id'], axis=1)
+# print(f"Working Directory: {working_dir}")
+# ? Folder path
+    folder_path = f"{working_dir}"
+# print(f"Folder Path: {folder_path}")
+# ? List of files
+    for f in os.listdir(folder_path):
+        if f.endswith(".csv"):
+            file_path = os.path.join(folder_path, f)
+# print(f" printing File path : {file_path}")
+        data = pd.read_csv(file_path)
+    # print(data.head())
+        data = data.drop(["Unnamed: 32", "id"], axis=1)
 
-    data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
+        data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
+
     return data
 
 
