@@ -6,9 +6,13 @@ import plotly
 import plotly.graph_objects as go
 import numpy as np
 
+current_directory = os.getcwd()
+filename = "data.csv"
+file_path = os.path.join(current_directory, filename)
+print(file_path)
 
 def get_clean_data():
-    data = pd.read_csv(r"/d/Resume_projects/Python_Practice/Log_Reg/app/data.csv")
+    data = pd.read_csv(file_path)
 
     data = data.drop(['Unnamed: 32', 'id'], axis=1)
 
