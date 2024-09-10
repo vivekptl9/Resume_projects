@@ -5,34 +5,78 @@ import os
 import plotly
 import plotly.graph_objects as go
 import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, r2_score, mean_absolute_error
+from sklearn.preprocessing import StandardScaler
+import pickle as pickle
 
 
-def get_clean_data():
-    working_dir = os.path.dirname(os.path.abspath(__file__))
 
-# print(f"Working Directory: {working_dir}")
+
+working_dir = os.path.dirname(os.path.abspath(__file__),)
+print(f"Working Directory: {working_dir}")
 # ? Folder path
-    folder_path = f"{working_dir}"
-# print(f"Folder Path: {folder_path}")
-    file_path= None
+folder_path = f"{working_dir}"
+print(f"Folder Path: {folder_path}")
 # ? List of files
-    for f in os.listdir(folder_path):
-        if f.endswith(".csv"):
-            file_path = os.path.join(folder_path, f)
-# print(f" printing File path : {file_path}")
-        data = pd.read_csv(file_path)
-    # print(data.head())
-        data = data.drop(["Unnamed: 32", "id"], axis=1)
+for f in os.listdir(folder_path):
+    if f.endswith(".csv"):
+        file_path = os.path.join(folder_path, f)
+print(f" printing File path : {file_path}")
+data = pd.read_csv(file_path)
+print(data.head())
+data = data.drop(["Unnamed: 32", "id"], axis=1)
+data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
+print(data.head())
 
-        data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
 
-    return data
+def create_model(data):
+    X = data.drop(['diagnosis'], axis=1)
+    y = data['diagnosis']
+
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42)
+    model = LogisticRegression()
+    model.fit(X_train, y_train)
+
+    y_pred = model.predict(X_test)
+
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Accuracy: {accuracy}")
+
+    mae = mean_absolute_error(y_test, y_pred)
+    print(f"MAE: {mae}")
+
+    r2 = r2_score(y_test, y_pred)
+    print(f"R2 Score: {r2}")
+
+    classification_report1 = classification_report(y_test, y_pred)
+    print(f"Classification Report: {classification_report1}")
+
+    return model, scaler
+
+
+model, scaler = create_model(data)
+with open('model.pkl', 'wb') as f:
+    pickle.dump(model, f)
+with open('scaler.pkl', 'wb') as f:
+    pickle.dump(scaler, f)
+print("Model and scaler saved as pickle files.")
+
+
+
+
+
+
+
 
 
 def add_sidebar():
     st.sidebar.header("Cell Nuclei Measurements")
-
-    data = get_clean_data()
     slider_labels = [
         ("Radius (mean)", "radius_mean"),
         ("Texture (mean)", "texture_mean"),
@@ -80,7 +124,6 @@ def add_sidebar():
 
 
 def get_scaled_values(input_dict):
-    data = get_clean_data()
     X = data.drop(['diagnosis'], axis=1)
     scaled_dict = {}
     for key, value in input_dict.items():
@@ -148,8 +191,8 @@ def get_radar_chart(input_data):
     return fig
 
 def add_predictions(input_data):
-    model = pickle.load(open('../model.pkl', 'rb'))
-    scale = pickle.load(open('../scaler.pkl', 'rb'))
+    model = pickle.load(open('model.pkl', 'rb'))
+    scale = pickle.load(open('scaler.pkl', 'rb'))
     
     input_array = np.array(list(input_data.values())).reshape(1,-1)
     input_array_scaled = scale.transform(input_array)
@@ -177,6 +220,7 @@ def add_predictions(input_data):
     st.write(":gray[Note:- This app can assist medical professionals in making a diagnosis, but should not be used as a substitute for a professional diagnosis.]")
 
 def main():
+    
     st.set_page_config(page_title="Breast Cancer Prediction", page_icon=":female-doctor:", layout="wide")
     #file_path=file_path
     input_data = add_sidebar()
